@@ -1,0 +1,84 @@
+{% extends "interview_questions/base.html" %}
+
+{% block title %}
+Главная страница &mdash; Interview Project
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <h1>interview-jedi – технические задачи и вопросы с IT-собеседований</h1>
+        <p>Делитесь задачами и вопросами, обсуждайте, проверяйте свои знания!</p>
+    </div>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-danger" role="alert">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <br>
+    <div class="row">
+        <div class="col-md-9">
+
+            <ul class="nav nav-tabs">
+
+                <li role="presentation" {% if title == "Последние добавленные" %}class="active"{% endif %}>
+                    <a href="/">Последние добавленные</a>
+                </li>
+                <li role="presentation" {% if title == "Лучшие за сутки" %}class="active"{% endif %}>
+                    <a href="/?order=votes_day">Лучшие за сутки</a>
+                </li>
+                <li role="presentation" {% if title == "Лучшие за неделю" %}class="active"{% endif %}>
+                    <a href="/?order=votes_week">Лучшие за неделю</a>
+                </li>
+                <li role="presentation" {% if title == "Лучшие за месяц" %}class="active"{% endif %}>
+                    <a href="/?order=votes_month">Лучшие за месяц</a>
+                </li>
+                <li role="presentation" {% if title == "Лучшие за все время" %}class="active"{% endif %}>
+                    <a href="/?order=votes">Лучшие за все время</a>
+                </li>
+            </ul>
+
+            {% if problems %}
+                <ul class="list-unstyled">
+                    {% for problem in problems %}
+                        <li><h3><a href="{% url 'interview_questions:detail' problem.id %}">{{ problem.title }}</a></h3>
+                        {{ problem.problem_text }}
+                        <p>Рейтинг: {{ problem.total_votes }}</p>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center">
+                            <ul class="pagination">
+                                {% if problems.has_previous %}
+                                    <li><a href="?page={{ problems.previous_page_number }}">Назад</a></li>
+                                {% endif %}
+                                {% for page_number in problems.paginator.page_range %}
+                                    <li><a href="?page={{ page_number }}">{{ page_number }}</a></li>
+                                {% endfor %}
+                                {% if problems.has_next %}
+                                    <li><a href="?page={{ problems.next_page_number }}">Вперед</a></li>
+                                {% endif %}
+                            </ul>
+                            <span class="current">
+                                Страница {{ problems.number }} из {{ problems.paginator.num_pages }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <br>
+                <div>Задач нет, но вы держитесь! Всего доброго, здоровья, хорошего настроения.</div></p>
+            {% endif %}
+        </div>
+        <div class="col-md-3">
+    {#            <a href="/p/add/" class="btn btn-primary">Добавить задачу</a>#}
+            <h2>Темы:</h2>
+            <ul class="list-unstyled">
+                {% for top_topic in top %}
+                    <li><a href="/topics/{{ top_topic.url }}/">{{ top_topic.topic }}</a>&nbsp;x {{ top_topic.amount }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock content %}

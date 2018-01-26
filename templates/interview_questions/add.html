@@ -1,0 +1,19 @@
+{% extends "interview_questions/base.html" %}
+{% block title %}
+{{ title }} &mdash; Interview Project
+{% endblock %}
+{% block content %}
+<h2>{{ title }}</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="fieldWrapper">
+            {{ field.errors }}
+            {{ field.label_tag }} <br>
+            {{ field }}
+        </div>
+    {% endfor %}
+    <button type="submit">Добавить</button>
+</form>
+{% endblock content %}
